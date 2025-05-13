@@ -20,23 +20,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final JwtFilter jwtFilter;
-    private final UnauthorizedEntryPoint unauthorizedEntryPoint;
-    private final ForbiddenEntryPoint forbiddenEntryPoint;
+	private final JwtFilter jwtFilter;
+	private final UnauthorizedEntryPoint unauthorizedEntryPoint;
+	private final ForbiddenEntryPoint forbiddenEntryPoint;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers(HttpMethod.POST, "/member/register").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/member").permitAll().anyRequest()
-                                .authenticated())
-                .exceptionHandling(e -> e.authenticationEntryPoint(unauthorizedEntryPoint)
-                        .accessDeniedHandler(forbiddenEntryPoint))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+		httpSecurity.csrf(csrf -> csrf.disable())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(
+						auth -> auth.requestMatchers(HttpMethod.POST, "/member/register").permitAll()
+								.requestMatchers(HttpMethod.GET, "/member").permitAll().anyRequest()
+								.authenticated())
+				.exceptionHandling(e -> e.authenticationEntryPoint(unauthorizedEntryPoint)
+						.accessDeniedHandler(forbiddenEntryPoint))
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return httpSecurity.build();
-    }
+		return httpSecurity.build();
+	}
 
 }
